@@ -101,7 +101,7 @@ class _Home extends State<Home> {
                   margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                   child: ListTile(
                     leading: IconButton(
-                        icon: Icon(fav ? Icons.favorite_border : Icons.favorite),
+                        icon: Icon(fav ? Icons.favorite : Icons.favorite_border),
                         onPressed: () => {
                           setState((){
                             fav = !fav;
