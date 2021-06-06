@@ -6,7 +6,7 @@ import 'login.dart';
 import 'cadastro.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-//import 'detalhamento_contato.dart';
+import 'detalhamento.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -83,7 +83,7 @@ class _Home extends State<Home> {
           }
           if (snapshot.data.docs.length == 0){
             return Center(
-                child: Text('A agenda não possui contatos ainda.')
+                child: Text('Você ainda não postou as suas ideias!')
             );
           }
           return ListView.builder(
@@ -115,11 +115,11 @@ class _Home extends State<Home> {
                       //spacing: 2,
                         children: <Widget>[
                           IconButton(
-                            icon: Icon(Icons.account_circle),
-                            onPressed: () => null/*Navigator.push(
+                            icon: Icon(Icons.navigate_next),
+                            onPressed: () => Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => Detalhamento(id: item['nome'])),
-                            ),*/
+                              MaterialPageRoute(builder: (context) => Detalhamento(id: item['id'])),
+                            ),
                           ),
                           /*IconButton(
                             icon: Icon(Icons.edit_outlined),

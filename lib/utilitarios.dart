@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import "package:googleapis_auth/auth_io.dart";
@@ -39,10 +40,8 @@ botaoGenerico(texto, BuildContext context, rota){
 
 modalCreate(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
   var form = GlobalKey<FormState>();
-  var nome = TextEditingController();
-  var email = TextEditingController();
-  var telefone = TextEditingController();
-  var cep = TextEditingController();
+  var descricao = TextEditingController();
+  var titulo = TextEditingController();
 
   return showDialog(
       context: context,
@@ -56,9 +55,9 @@ modalCreate(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    controller: nome,
+                    controller: titulo,
                     decoration: InputDecoration(
-                      hintText: 'Nome',
+                      hintText: 'Título',
                       border: UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: Colors.red[800]
@@ -74,45 +73,9 @@ modalCreate(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
                   ),
                   SizedBox(height: 10),
                   TextFormField(
-                    controller: telefone,
+                    controller: descricao,
                     decoration: InputDecoration(
-                      hintText: 'Telefone',
-                      border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.red[800]
-                          )
-                      ),
-                    ),
-                    validator: (value){
-                      if(value.isEmpty){
-                        return 'Campo de preenchimento obrigatório';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    controller: email,
-                    decoration: InputDecoration(
-                      hintText: 'E-mail',
-                      border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.red[800]
-                          )
-                      ),
-                    ),
-                    validator: (value){
-                      if(value.isEmpty){
-                        return 'Campo de preenchimento obrigatório';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    controller: cep,
-                    decoration: InputDecoration(
-                      hintText: 'CEP',
+                      hintText: 'Descrição',
                       border: UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: Colors.red[800]
@@ -140,18 +103,16 @@ modalCreate(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
             ),
             TextButton(
                 onPressed: () async{
-                  var endereco = await _recuperaCep(cep.text);
+                  /*var endereco = await _recuperaCep(cep.text);
                   Map<String, dynamic> jsonEndereco = jsonDecode(endereco.body);
                   endereco = "Logradouro: ${jsonEndereco['logradouro']} \n Bairro: ${jsonEndereco['bairro']} \n Localidade: ${jsonEndereco['localidade']}";
-                  print(jsonEndereco);
+                  print(jsonEndereco);*/
                   if(op == 'edit'){
                     if(form.currentState.validate())
                       doc.reference.update({
-                        'cep': cep.text,
-                        'nome': nome.text,
-                        'email': email.text,
-                        'endereco': endereco,
-                        'telefone': telefone.text,
+                        'titulo': titulo.text,
+                        'descricao': descricao.text,
+                        'favorito': false,
                         'status': 'ativo'
                       });
                   }
@@ -159,12 +120,11 @@ modalCreate(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
                     if(form.currentState.validate()) {
                       await FirebaseFirestore.instance.collection('contatos')
                           .add({
-                        'cep': cep.text,
-                        'nome': nome.text,
-                        'email': email.text,
-                        'endereco': endereco,
-                        'telefone': telefone.text,
-                        'status': 'ativo'
+                        'titulo': titulo.text,
+                        'descricao': descricao.text,
+                        'favorito': false,
+                        'status': 'ativo',
+                        'data': Timestamp.now()
                       });
                     }
                   }
@@ -279,13 +239,15 @@ createUser(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
                       });
                   }
                   else {
+                    var random = new Random();
                     if (form.currentState.validate()) {
                       await FirebaseFirestore.instance.collection('usuarios')
                           .add({
                         'email': email.text,
                         'login': login.text,
                         'senha': senha.text,
-                        'status': 'ativo'
+                        'status': 'ativo',
+                        'id': random.nextInt(1500000) + 1
                       });
                     }
                   }
