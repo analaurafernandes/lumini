@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'utilitarios.dart';
 import 'login.dart';
 import 'cadastro.dart';
-//import 'home_page.dart';
+import 'home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 //import 'usuarios.dart';
@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp>{
         routes: {
           "/login":     (context) => TelaLogin(),
           "/cadastrar": (context) => TelaCadastro(),
-          //"/home": (context) => Home(),
+          "/home": (context) => Home(),
           //"/users": (context) => Users(),
           //"/detalhamento": (context) => Detalhamento()
         },
