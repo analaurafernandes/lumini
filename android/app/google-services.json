@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "719351110127",
+    "project_id": "lumini-5adf3",
+    "storage_bucket": "lumini-5adf3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719351110127:android:1a3cae4a0b20bff8373e1a",
+        "android_client_info": {
+          "package_name": "pucminas.br.lumini"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "719351110127-06h6v27t66rfh8ds1smc8oq993ar98oc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARZRW3dAXZbV0SSxMPexD6xYsW1KRm40k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "719351110127-06h6v27t66rfh8ds1smc8oq993ar98oc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
