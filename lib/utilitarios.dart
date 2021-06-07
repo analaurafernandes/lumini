@@ -118,8 +118,15 @@ modalCreate(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
                   }
                   else{
                     if(form.currentState.validate()) {
-                      await FirebaseFirestore.instance.collection('contatos')
-                          .add({
+                      await FirebaseFirestore.instance.collection('ideias').add({
+                        'titulo': titulo.text,
+                        'descricao': descricao.text,
+                        'favorito': false,
+                        'status': 'ativo',
+                        'data': Timestamp.now()
+                      });
+                      print("PASSEI AQUI");
+                      print({
                         'titulo': titulo.text,
                         'descricao': descricao.text,
                         'favorito': false,

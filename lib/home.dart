@@ -121,16 +121,7 @@ class _Home extends State<Home> {
                               MaterialPageRoute(builder: (context) => Detalhamento(id: item['id'])),
                             ),
                           ),
-                          /*IconButton(
-                            icon: Icon(Icons.edit_outlined),
-                            onPressed: () => modalCreate(context, 'edit', doc),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.delete),
-                            color: Colors.red[300],
-                            onPressed: () => doc.reference.update({'status': 'excluido'}),
-                          ),*/
-                        ]
+                        ],
                     ),
                   ),
                 );

@@ -16,10 +16,14 @@ class Detalhamento extends StatefulWidget {
 }
 
 class _Detalhamento extends State<Detalhamento> {
+  var doc;
+  var item;
   final int id;
   _Detalhamento({Key key, @required this.id});
 
-  File _image;
+  File _image1;
+  File _image2;
+  File _image3;
   _recuperaCep(String CEP) async{
     String cep = CEP;
     String url = "https://viacep.com.br/ws/${cep}/json/";
@@ -28,13 +32,24 @@ class _Detalhamento extends State<Detalhamento> {
     print("Resposta: " + response.body);
   }
 
-  Future _getImage() async{
+  Future _getImage(idImagem) async{
     print("ENTREI");
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     setState(() {
-      _image = image;
-      print('_image: $_image');
+      switch(idImagem){
+        case 0:
+          _image1 = image;
+          break;
+        case 1:
+          _image2 = image;
+          break;
+        case 2:
+          _image3 = image;
+          break;
+      }
+
+      print('_image: $_image1');
     });
   }
 
@@ -114,52 +129,67 @@ class _Detalhamento extends State<Detalhamento> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(5)
             ),
-            margin: const EdgeInsets.fromLTRB(20, 80, 20, 100),
+            margin: const EdgeInsets.fromLTRB(20, 80, 20, 0),
             padding: EdgeInsets.all(20),
             child: Column(
               children: <Widget>[
                 Row(
+                children: <Widget>[
+                  Icon(Icons.camera_alt_outlined),
+                  Text(' Imagens'),
+                ]),
+                //Divider(),
+                GridView.count(
+                  shrinkWrap: true,
+                  primary: false,
+                  padding: const EdgeInsets.all(10),
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  crossAxisCount: 3,
                   children: <Widget>[
-
                     GestureDetector(
-                      onTap: _getImage,
+                      onTap: () => _getImage(0),
                       child: Container(
                           decoration: BoxDecoration(
                               color: Colors.black12,
-                              borderRadius: BorderRadius.circular(50)
                           ),
-                          height: MediaQuery.of(context).copyWith().size.height / 8,
-                          width: MediaQuery.of(context).copyWith().size.height / 8,
-                          //color: Colors.black12,
-                          child: _image == null ? Icon(Icons.add) : Image.file(_image)
+                          child: _image1 == null ? Icon(Icons.add) : Image.file(_image1)
                       ),
                     ),
+                    GestureDetector(
+                      onTap: () => _getImage(1),
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.black12,
+                          ),
+                          child: _image2 == null ? Icon(Icons.add) : Image.file(_image2)
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => _getImage(2),
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.black12,
+                          ),
+                          child: _image3 == null ? Icon(Icons.add) : Image.file(_image3)
+                      ),
+                    ),
+                  ]
+                ),
+                Row(
+                  children: <Widget>[
                     Expanded(
                       child: SizedBox(
                         height: 260.0,
-                        child:ListView.builder(
+                        child: ListView.builder(
                             itemCount: snapshot.data.docs.length,
                             itemBuilder:(BuildContext context, int i){
-                              var doc = snapshot.data.docs[i];
-                              var item = Map.of(doc.data());
+                              doc = snapshot.data.docs[i];
+                              item = Map.of(doc.data());
                               print(item['titulo']);
                               return ListTile(
                                 title: Text(item['titulo']),
                                 subtitle: Text("${item['descricao']}\n Criação: ${DateFormat("dd/MM/yyyy hh:mm").format(DateTime.fromMillisecondsSinceEpoch(item['data'].seconds * 1000))}"),
-                                trailing: Wrap(
-                                  //spacing: 2,
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.edit_outlined),
-                                        onPressed: () => modalCreate(context, 'edit', doc),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.delete),
-                                        color: Colors.red[300],
-                                        onPressed: () => doc.reference.update({'status': 'excluido'}),
-                                      ),
-                                    ],
-                                ),
                               );
                             },
                         ),
@@ -167,40 +197,32 @@ class _Detalhamento extends State<Detalhamento> {
                     ),
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    TextButton(
+                        onPressed: () => modalCreate(context, 'edit', doc),
+                        style: TextButton.styleFrom(
+                          primary: Colors.red[800],
+                        ),
+                        child: Text('Editar')
+                    ),
+                    TextButton(
+                        onPressed: () => {
+                          doc.reference.update({'status': 'excluido'}),
+
+                        },
+                        style: TextButton.styleFrom(
+                          primary: Colors.red[800],
+                        ),
+                        child: Text('Excluir')
+                    ),
+                  ]
+                ),
               ],
             ),
           );
-
-
-
-
-          /*ListView.builder(
-              itemCount: snapshot.data.docs.length,
-              itemBuilder:(BuildContext context, int i){
-                var doc = snapshot.data.docs[i];
-                var item = Map.of(doc.data());
-                print(item['nome']);
-                return Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5)
-                  ),
-                  margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                  child:
-                      ListTile(
-                        leading: CircleAvatar(
-                        ),
-                        title: Text(item['nome']),
-                          subtitle: Text("Telefone: ${item['telefone']}\n E-mail: ${item['email']} \n ${item['endereco']} \n CEP: ${item['cep']}"),
-                          /*trailing: IconButton(
-                          icon: Icon(Icons.delete),
-                          color: Colors.red[300],
-                          onPressed: () => doc.reference.update({'status': 'excluido'}),
-                        )*/
-                      ),
-                );
-              }
-          );*/
         },
       ),
       /*floatingActionButton: FloatingActionButton(
