@@ -68,7 +68,15 @@ class _Lugares extends State<Lugares> {
         ],
       ),
       backgroundColor: Colors.grey[100],
-      body: StreamBuilder(
+      body: new Stack(
+          children: <Widget>[
+      new Container(
+      decoration: new BoxDecoration(
+      image: new DecorationImage(
+      image: AssetImage('assets/images/locais.png'),
+        fit: BoxFit.cover))
+      ),
+      StreamBuilder(
         stream: snapshots,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
           if (snapshot.hasError){
@@ -127,6 +135,8 @@ class _Lugares extends State<Lugares> {
           );
         },
       ),
+    ],
+    ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => modalCreateLocal(context, 'add', null),
         tooltip: 'Adicionar novo',

@@ -69,7 +69,15 @@ class _Home extends State<Home> {
         ],
       ),
       backgroundColor: Colors.grey[100],
-      body: StreamBuilder(
+      body: new Stack(
+          children: <Widget>[
+      new Container(
+      decoration: new BoxDecoration(
+      image: new DecorationImage(
+      image: AssetImage('assets/images/ideias.png'),
+        fit: BoxFit.cover))
+    ),
+    StreamBuilder(
         stream: snapshots,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
           if (snapshot.hasError){
@@ -129,6 +137,8 @@ class _Home extends State<Home> {
               }
           );
         },
+      ),
+      ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => modalCreate(context, 'add', null),

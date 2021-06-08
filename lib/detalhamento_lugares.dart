@@ -204,7 +204,7 @@ class _Detalhamento_lugares extends State<Detalhamento_lugares> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       TextButton(
-                          onPressed: () => modalCreate(context, 'edit', doc),
+                          onPressed: () => modalCreateLocal(context, 'edit', doc),
                           style: TextButton.styleFrom(
                             primary: Colors.red[800],
                           ),
