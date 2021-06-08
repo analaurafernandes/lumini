@@ -6,19 +6,18 @@ import 'utilitarios.dart';
 import 'favoritos.dart';
 import 'login.dart';
 import 'package:intl/intl.dart';
-import 'detalhamento.dart';
-import 'lugares.dart';
+import 'detalhamento_lugares.dart';
 
-class Home extends StatefulWidget {
+class Lugares extends StatefulWidget {
   @override
-  _Home createState() => _Home();
+  _Lugares createState() => _Lugares();
 }
 
-class _Home extends State<Home> {
+class _Lugares extends State<Lugares> {
 
   @override
   Widget build(BuildContext context){
-    var snapshots = FirebaseFirestore.instance.collection('ideias').where('status', isEqualTo: 'ativo').orderBy('titulo').snapshots();
+    var snapshots = FirebaseFirestore.instance.collection('lugares').where('status', isEqualTo: 'ativo').orderBy('apelido').snapshots();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -38,7 +37,7 @@ class _Home extends State<Home> {
                 else if(result == 1){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Lugares()),
+                    MaterialPageRoute(builder: (context) => TelaCadastro()),
                   );
                 }
                 else if(result == 2){
@@ -55,7 +54,7 @@ class _Home extends State<Home> {
                     value: 0,
                   ),
                   PopupMenuItem(
-                    child: Text('Lugares'),
+                    child: Text('Cadastro'),
                     value: 1,
                   ),
                   PopupMenuItem(
@@ -93,7 +92,6 @@ class _Home extends State<Home> {
                 var doc = snapshot.data.docs[i];
                 var item = Map.of(doc.data());
                 var fav = item['favorito'] ? true : false;
-                print(item['nome']);
                 return Container(
                   decoration: BoxDecoration(
                       color: Colors.white,
@@ -110,19 +108,18 @@ class _Home extends State<Home> {
                           doc.reference.update({'favorito': fav})
                         }
                     ),
-                    title: Text(item['titulo']),
-                    subtitle: Text(DateFormat("dd/MM/yyyy hh:mm").format(DateTime.fromMillisecondsSinceEpoch(item['data'].seconds * 1000))),
+                    title: Text(item['apelido']),
                     trailing: Wrap(
                       //spacing: 2,
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(Icons.navigate_next),
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Detalhamento(id: item['id'])),
-                            ),
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.navigate_next),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Detalhamento_lugares(id: item['id'])),
                           ),
-                        ],
+                        ),
+                      ],
                     ),
                   ),
                 );
@@ -131,7 +128,7 @@ class _Home extends State<Home> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => modalCreate(context, 'add', null),
+        onPressed: () => modalCreateLocal(context, 'add', null),
         tooltip: 'Adicionar novo',
         child: Icon(Icons.add),
         backgroundColor: Colors.red[800],

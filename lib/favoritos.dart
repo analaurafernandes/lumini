@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lumini/cadastro.dart';
-import 'package:lumini/favoritos.dart';
 import 'utilitarios.dart';
-import 'favoritos.dart';
+//import 'usuarios.dart';
 import 'login.dart';
+import 'cadastro.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'detalhamento.dart';
-import 'lugares.dart';
 
-class Home extends StatefulWidget {
+class Favoritos extends StatefulWidget {
   @override
-  _Home createState() => _Home();
+  _Favoritos createState() => _Favoritos();
 }
 
-class _Home extends State<Home> {
+class _Favoritos extends State<Favoritos> {
 
   @override
   Widget build(BuildContext context){
-    var snapshots = FirebaseFirestore.instance.collection('ideias').where('status', isEqualTo: 'ativo').orderBy('titulo').snapshots();
+    var snapshots = FirebaseFirestore.instance.collection('ideias').where('favorito', isEqualTo: true).orderBy('titulo').snapshots();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -32,13 +31,13 @@ class _Home extends State<Home> {
                 if (result == 0) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Favoritos()),
+                    MaterialPageRoute(builder: (context) => null),
                   );
                 }
                 else if(result == 1){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Lugares()),
+                    MaterialPageRoute(builder: (context) => TelaCadastro()),
                   );
                 }
                 else if(result == 2){
@@ -51,11 +50,11 @@ class _Home extends State<Home> {
               itemBuilder: (BuildContext context){
                 return [
                   PopupMenuItem(
-                    child: Text('Favoritos'),
+                    child: Text('Usuários'),
                     value: 0,
                   ),
                   PopupMenuItem(
-                    child: Text('Lugares'),
+                    child: Text('Cadastro'),
                     value: 1,
                   ),
                   PopupMenuItem(
@@ -84,7 +83,7 @@ class _Home extends State<Home> {
           }
           if (snapshot.data.docs.length == 0){
             return Center(
-                child: Text('Você ainda não postou as suas ideias!')
+                child: Text('Você ainda não possui ideias favoritas!')
             );
           }
           return ListView.builder(
@@ -114,27 +113,21 @@ class _Home extends State<Home> {
                     subtitle: Text(DateFormat("dd/MM/yyyy hh:mm").format(DateTime.fromMillisecondsSinceEpoch(item['data'].seconds * 1000))),
                     trailing: Wrap(
                       //spacing: 2,
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(Icons.navigate_next),
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Detalhamento(id: item['id'])),
-                            ),
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.navigate_next),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Detalhamento(id: item['id'])),
                           ),
-                        ],
+                        ),
+                      ],
                     ),
                   ),
                 );
               }
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => modalCreate(context, 'add', null),
-        tooltip: 'Adicionar novo',
-        child: Icon(Icons.add),
-        backgroundColor: Colors.red[800],
       ),
     );
   }

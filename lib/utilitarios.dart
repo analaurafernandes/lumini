@@ -117,13 +117,15 @@ modalCreate(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
                       });
                   }
                   else{
+                    var random = new Random();
                     if(form.currentState.validate()) {
                       await FirebaseFirestore.instance.collection('ideias').add({
                         'titulo': titulo.text,
                         'descricao': descricao.text,
                         'favorito': false,
                         'status': 'ativo',
-                        'data': Timestamp.now()
+                        'data': Timestamp.now(),
+                        'id': random.nextInt(1500000) + 1
                       });
                       print("PASSEI AQUI");
                       print({
@@ -132,6 +134,150 @@ modalCreate(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
                         'favorito': false,
                         'status': 'ativo',
                         'data': Timestamp.now()
+                      });
+                    }
+                  }
+                  Navigator.of(context).pop();
+                },
+                style: TextButton.styleFrom(
+                  primary: Colors.red[800],
+                ),
+                child: Text('Salvar')
+            )
+          ],
+        );
+      }
+  );
+}
+
+modalCreateLocal(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
+  var form = GlobalKey<FormState>();
+  var apelido = TextEditingController();
+  var cep = TextEditingController();
+  var rua = TextEditingController();
+  var bairro = TextEditingController();
+
+  return showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text('Adicionar Local'),
+          content: Form(
+            key: form,
+            child: Container(
+              height: MediaQuery.of(context).size.height/2,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: apelido,
+                    decoration: InputDecoration(
+                      hintText: 'Apelido',
+                      border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.red[800]
+                          )
+                      ),
+                    ),
+                    validator: (value){
+                      if(value.isEmpty){
+                        return 'Campo de preenchimento obrigatório';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    controller: rua,
+                    decoration: InputDecoration(
+                      hintText: 'Rua',
+                      border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.red[800]
+                          )
+                      ),
+                    ),
+                    validator: (value){
+                      if(value.isEmpty){
+                        return 'Campo de preenchimento obrigatório';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    controller: bairro,
+                    decoration: InputDecoration(
+                      hintText: 'Bairro',
+                      border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.red[800]
+                          )
+                      ),
+                    ),
+                    validator: (value){
+                      if(value.isEmpty){
+                        return 'Campo de preenchimento obrigatório';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    controller: cep,
+                    decoration: InputDecoration(
+                      hintText: 'Cep',
+                      border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.red[800]
+                          )
+                      ),
+                    ),
+                    validator: (value){
+                      if(value.isEmpty){
+                        return 'Campo de preenchimento obrigatório';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: TextButton.styleFrom(
+                  primary: Colors.red[800],
+                ),
+                child: Text('Cancelar')
+            ),
+            TextButton(
+                onPressed: () async{
+                  var endereco = await _recuperaCep(cep.text);
+                  Map<String, dynamic> jsonEndereco = jsonDecode(endereco.body);
+                  endereco = "Rua: ${jsonEndereco['logradouro']} \n Bairro: ${jsonEndereco['bairro']} \n Localidade: ${jsonEndereco['localidade']}";
+                  print(jsonEndereco);
+                  if(op == 'edit'){
+                    if(form.currentState.validate())
+                      doc.reference.update({
+                        'apelido': apelido.text,
+                        'endereco': endereco,
+                      });
+                  }
+                  else{
+                    var random = new Random();
+                    if(form.currentState.validate()) {
+                      await FirebaseFirestore.instance.collection('lugares').add({
+                        'apelido': apelido.text,
+                        'endereco': endereco,
+                        'status': 'ativo',
+                        'favorito': false,
+                        'id': random.nextInt(1500000) + 1
+                      });
+                      print("PASSEI AQUI");
+                      print({
+                        'apelido': apelido.text,
+                        'endereco': endereco
                       });
                     }
                   }

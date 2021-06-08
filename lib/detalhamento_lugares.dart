@@ -7,20 +7,21 @@ import 'login.dart';
 import 'cadastro.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'home.dart';
+import 'lugares.dart';
+import 'mapa.dart';
 
-class Detalhamento extends StatefulWidget {
+class Detalhamento_lugares extends StatefulWidget {
   final int id;
-  Detalhamento({Key key, @required this.id}) : super(key: key);
+  Detalhamento_lugares({Key key, @required this.id}) : super(key: key);
   @override
-  _Detalhamento createState() => _Detalhamento(id: id);
+  _Detalhamento_lugares createState() => _Detalhamento_lugares(id: id);
 }
 
-class _Detalhamento extends State<Detalhamento> {
+class _Detalhamento_lugares extends State<Detalhamento_lugares> {
   var doc;
   var item;
   final int id;
-  _Detalhamento({Key key, @required this.id});
+  _Detalhamento_lugares({Key key, @required this.id});
 
   File _image1;
   File _image2;
@@ -56,7 +57,7 @@ class _Detalhamento extends State<Detalhamento> {
 
   @override
   Widget build(BuildContext context){
-    var snapshots = FirebaseFirestore.instance.collection('ideias').where('id', isEqualTo: id).snapshots();
+    var snapshots = FirebaseFirestore.instance.collection('lugares').where('id', isEqualTo: id).snapshots();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -135,47 +136,47 @@ class _Detalhamento extends State<Detalhamento> {
             child: Column(
               children: <Widget>[
                 Row(
-                children: <Widget>[
-                  Icon(Icons.camera_alt_outlined),
-                  Text(' Imagens'),
-                ]),
+                    children: <Widget>[
+                      Icon(Icons.camera_alt_outlined),
+                      Text(' Imagens'),
+                    ]),
                 //Divider(),
                 GridView.count(
-                  shrinkWrap: true,
-                  primary: false,
-                  padding: const EdgeInsets.all(10),
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 3,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () => _getImage(0),
-                      child: Container(
-                          decoration: BoxDecoration(
+                    shrinkWrap: true,
+                    primary: false,
+                    padding: const EdgeInsets.all(10),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 3,
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () => _getImage(0),
+                        child: Container(
+                            decoration: BoxDecoration(
                               color: Colors.black12,
-                          ),
-                          child: _image1 == null ? Icon(Icons.add) : Image.file(_image1)
+                            ),
+                            child: _image1 == null ? Icon(Icons.add) : Image.file(_image1)
+                        ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () => _getImage(1),
-                      child: Container(
-                          decoration: BoxDecoration(
+                      GestureDetector(
+                        onTap: () => _getImage(1),
+                        child: Container(
+                            decoration: BoxDecoration(
                               color: Colors.black12,
-                          ),
-                          child: _image2 == null ? Icon(Icons.add) : Image.file(_image2)
+                            ),
+                            child: _image2 == null ? Icon(Icons.add) : Image.file(_image2)
+                        ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () => _getImage(2),
-                      child: Container(
-                          decoration: BoxDecoration(
+                      GestureDetector(
+                        onTap: () => _getImage(2),
+                        child: Container(
+                            decoration: BoxDecoration(
                               color: Colors.black12,
-                          ),
-                          child: _image3 == null ? Icon(Icons.add) : Image.file(_image3)
+                            ),
+                            child: _image3 == null ? Icon(Icons.add) : Image.file(_image3)
+                        ),
                       ),
-                    ),
-                  ]
+                    ]
                 ),
                 Row(
                   children: <Widget>[
@@ -183,58 +184,61 @@ class _Detalhamento extends State<Detalhamento> {
                       child: SizedBox(
                         height: 260.0,
                         child: ListView.builder(
-                            itemCount: snapshot.data.docs.length,
-                            itemBuilder:(BuildContext context, int i){
-                              doc = snapshot.data.docs[i];
-                              item = Map.of(doc.data());
-                              print(item['titulo']);
-                              return ListTile(
-                                title: Text(item['titulo']),
-                                subtitle: Text("${item['descricao']}\n Criação: ${DateFormat("dd/MM/yyyy hh:mm").format(DateTime.fromMillisecondsSinceEpoch(item['data'].seconds * 1000))}"),
-                              );
-                            },
+                          itemCount: snapshot.data.docs.length,
+                          itemBuilder:(BuildContext context, int i){
+                            doc = snapshot.data.docs[i];
+                            item = Map.of(doc.data());
+                            print(item['apelido']);
+                            return ListTile(
+                              title: Text(item['apelido']),
+                              subtitle: Text("${item['endereco']}"),
+                            );
+                          },
                         ),
                       ),
                     ),
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    TextButton(
-                        onPressed: () => modalCreate(context, 'edit', doc),
-                        style: TextButton.styleFrom(
-                          primary: Colors.red[800],
-                        ),
-                        child: Text('Editar')
-                    ),
-                    TextButton(
-                        onPressed: () => {
-                          doc.reference.update({'status': 'excluido'}),
-                          Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Home()),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      TextButton(
+                          onPressed: () => modalCreate(context, 'edit', doc),
+                          style: TextButton.styleFrom(
+                            primary: Colors.red[800],
                           ),
-                        },
-                        style: TextButton.styleFrom(
-                          primary: Colors.red[800],
-                        ),
-                        child: Text('Excluir')
-                    ),
-                  ]
+                          child: Text('Editar')
+                      ),
+                      TextButton(
+                          onPressed: () => {
+                            doc.reference.update({'status': 'excluido'}),
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Lugares()),
+                            )
+                          },
+                          style: TextButton.styleFrom(
+                            primary: Colors.red[800],
+                          ),
+                          child: Text('Excluir')
+                      ),
+                    ]
                 ),
               ],
             ),
           );
         },
       ),
-      /*floatingActionButton: FloatingActionButton(
-        onPressed: () => modalCreateCalendar(context, 'add', null),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MapScreen()),
+        ),
         tooltip: 'Adicionar novo',
-        child: Icon(Icons.event_available),
+        child: Icon(Icons.search),
         backgroundColor: Colors.red[800],
-      ),*/
+      ),
     );
   }
 }
