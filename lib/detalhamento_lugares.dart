@@ -233,7 +233,7 @@ class _Detalhamento_lugares extends State<Detalhamento_lugares> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MapScreen()),
+          MaterialPageRoute(builder: (context) => MapScreen(latitude:item['latitude'], longitude:item['longitude'])),
         ),
         tooltip: 'Adicionar novo',
         child: Icon(Icons.search),

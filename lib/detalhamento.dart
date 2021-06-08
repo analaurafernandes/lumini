@@ -229,12 +229,6 @@ class _Detalhamento extends State<Detalhamento> {
           );
         },
       ),
-      /*floatingActionButton: FloatingActionButton(
-        onPressed: () => modalCreateCalendar(context, 'add', null),
-        tooltip: 'Adicionar novo',
-        child: Icon(Icons.event_available),
-        backgroundColor: Colors.red[800],
-      ),*/
     );
   }
 }

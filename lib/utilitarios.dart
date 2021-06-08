@@ -4,16 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:math';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:intl/intl.dart';
-import "package:googleapis_auth/auth_io.dart";
-import 'package:googleapis/calendar/v3.dart' hide Colors;
-//import 'calendar.dart';
+import 'package:geocoding/geocoding.dart';
+
 
 _recuperaCep(String cep) async{
   String url = "https://viacep.com.br/ws/${cep}/json/";
   http.Response response;
   response = await http.get(Uri.parse(url));
+  Map<String, dynamic> jsonEndereco = jsonDecode(response.body);
   return response;
 }
 
@@ -254,9 +252,11 @@ modalCreateLocal(BuildContext context, String op, QueryDocumentSnapshot<Object> 
             TextButton(
                 onPressed: () async{
                   var endereco = await _recuperaCep(cep.text);
+                  print(endereco);
                   Map<String, dynamic> jsonEndereco = jsonDecode(endereco.body);
                   endereco = "Rua: ${jsonEndereco['logradouro']} \n Bairro: ${jsonEndereco['bairro']} \n Localidade: ${jsonEndereco['localidade']}";
-                  print(jsonEndereco);
+                  List<Location> coordenadas = await locationFromAddress("${jsonEndereco['logradouro']}, ${jsonEndereco['localidade']}");
+                  print(coordenadas[0]);
                   if(op == 'edit'){
                     if(form.currentState.validate())
                       doc.reference.update({
@@ -272,6 +272,8 @@ modalCreateLocal(BuildContext context, String op, QueryDocumentSnapshot<Object> 
                         'endereco': endereco,
                         'status': 'ativo',
                         'favorito': false,
+                        'latitude': coordenadas[0].latitude,
+                        'longitude': coordenadas[0].longitude,
                         'id': random.nextInt(1500000) + 1
                       });
                       print("PASSEI AQUI");
