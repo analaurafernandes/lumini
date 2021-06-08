@@ -5,7 +5,6 @@ import 'package:lumini/favoritos.dart';
 import 'utilitarios.dart';
 import 'favoritos.dart';
 import 'login.dart';
-import 'package:intl/intl.dart';
 import 'detalhamento_lugares.dart';
 
 class Lugares extends StatefulWidget {

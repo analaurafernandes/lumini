@@ -3,11 +3,7 @@ import 'utilitarios.dart';
 import 'login.dart';
 import 'cadastro.dart';
 import 'home.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-//import 'usuarios.dart';
-import 'package:http/http.dart' as http;
-//import 'detalhamento_contato.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();

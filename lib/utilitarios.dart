@@ -11,7 +11,6 @@ _recuperaCep(String cep) async{
   String url = "https://viacep.com.br/ws/${cep}/json/";
   http.Response response;
   response = await http.get(Uri.parse(url));
-  Map<String, dynamic> jsonEndereco = jsonDecode(response.body);
   return response;
 }
 
@@ -45,7 +44,7 @@ modalCreate(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
       context: context,
       builder: (BuildContext context){
         return AlertDialog(
-          title: Text('Novo Contato'),
+          title: Text('Novo Registro'),
           content: Form(
             key: form,
             child: Container(
@@ -101,10 +100,6 @@ modalCreate(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
             ),
             TextButton(
                 onPressed: () async{
-                  /*var endereco = await _recuperaCep(cep.text);
-                  Map<String, dynamic> jsonEndereco = jsonDecode(endereco.body);
-                  endereco = "Logradouro: ${jsonEndereco['logradouro']} \n Bairro: ${jsonEndereco['bairro']} \n Localidade: ${jsonEndereco['localidade']}";
-                  print(jsonEndereco);*/
                   if(op == 'edit'){
                     if(form.currentState.validate())
                       doc.reference.update({
@@ -124,14 +119,6 @@ modalCreate(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
                         'status': 'ativo',
                         'data': Timestamp.now(),
                         'id': random.nextInt(1500000) + 1
-                      });
-                      print("PASSEI AQUI");
-                      print({
-                        'titulo': titulo.text,
-                        'descricao': descricao.text,
-                        'favorito': false,
-                        'status': 'ativo',
-                        'data': Timestamp.now()
                       });
                     }
                   }
@@ -276,11 +263,6 @@ modalCreateLocal(BuildContext context, String op, QueryDocumentSnapshot<Object> 
                         'longitude': coordenadas[0].longitude,
                         'id': random.nextInt(1500000) + 1
                       });
-                      print("PASSEI AQUI");
-                      print({
-                        'apelido': apelido.text,
-                        'endereco': endereco
-                      });
                     }
                   }
                   Navigator.of(context).pop();
@@ -419,141 +401,3 @@ createUser(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
       }
   );
 }
-
-/*modalCreateCalendar(BuildContext context, String op, QueryDocumentSnapshot<Object> doc){
-  var form = GlobalKey<FormState>();
-  DateTime dataInicio = DateTime.now();
-  DateTime dataFim = DateTime.now().add(Duration(days: 1));
-  CalendarClient calendarClient = CalendarClient();
-
-  TextEditingController _nomeEvento = TextEditingController();
-  return showDialog(
-      context: context,
-      builder: (BuildContext context){
-        return AlertDialog(
-          title: Text('Novo Evento'),
-          content: Form(
-            key: form,
-            child: Container(
-              height: MediaQuery.of(context).size.height/3,
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      TextButton(
-                          onPressed: () {
-                            DatePicker.showDateTimePicker(context,
-                                showTitleActions: true,
-                                minTime: DateTime(2021, 1, 1),
-                                maxTime: DateTime(2021, 12, 31), onChanged: (date) {
-                                  print('change $date');
-                                }, onConfirm: (date) {
-                                  dataInicio = date;
-
-                                  print(dataInicio);
-                                }, currentTime: DateTime.now(), locale: LocaleType.en);
-                          },
-                          child: Text(
-                            'Início',
-                            style: TextStyle(color: Colors.blue),
-                          )
-                      ),
-                      Text('${DateFormat("dd/MM/yyyy hh:mm").format(dataInicio)}'),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      TextButton(
-                          onPressed: () {
-                            DatePicker.showDateTimePicker(context,
-                                showTitleActions: true,
-                                minTime: DateTime(2021, 1, 1),
-                                maxTime: DateTime(2030, 12, 31), onChanged: (date) {
-                                  print('change $date');
-                                }, onConfirm: (date) {
-
-                                  dataFim = date;
-                                  print(dataFim);
-                                }, currentTime: DateTime.now(), locale: LocaleType.en);
-                          },
-                          child: Text(
-                            'Fim',
-                            style: TextStyle(color: Colors.blue),
-                          )
-                      ),
-                      Text('${DateFormat("dd/MM/yyyy hh:mm").format(dataInicio)}'),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    child: TextField(
-                      controller: _nomeEvento,
-                      decoration: InputDecoration(hintText: 'Insira o nome do evento'),
-                    ),
-                  ),
-                  /*TextFormField(
-                    controller: dataInicio,
-                    decoration: InputDecoration(
-                      hintText: 'Início',
-                      border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.red[800]
-                          )
-                      ),
-                    ),
-                    validator: (value){
-                      if(value.isEmpty){
-                        return 'Campo de preenchimento obrigatório';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    controller: dataFim,
-                    decoration: InputDecoration(
-                      hintText: 'Fim',
-                      border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.red[800]
-                          )
-                      ),
-                    ),
-                    validator: (value){
-                      if(value.isEmpty){
-                        return 'Campo de preenchimento obrigatório';
-                      }
-                      return null;
-                    },
-                  ),*/
-                ],
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                style: TextButton.styleFrom(
-                  primary: Colors.red[800],
-                ),
-                child: Text('Cancelar')
-            ),
-            TextButton(
-                onPressed: (){
-                  calendarClient.insert(
-                    _nomeEvento.text,
-                    dataInicio,
-                    dataFim,
-                  );
-                  Navigator.of(context).pop();
-                },
-                style: TextButton.styleFrom(
-                  primary: Colors.red[800],
-                ),
-                child: Text('Salvar')
-            )
-          ],
-        );
-      }
-  );
-}*/

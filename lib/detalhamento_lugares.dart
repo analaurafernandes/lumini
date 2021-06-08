@@ -2,10 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'utilitarios.dart';
-import 'package:intl/intl.dart';
 import 'login.dart';
 import 'cadastro.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'lugares.dart';
 import 'mapa.dart';
@@ -26,16 +24,8 @@ class _Detalhamento_lugares extends State<Detalhamento_lugares> {
   File _image1;
   File _image2;
   File _image3;
-  _recuperaCep(String CEP) async{
-    String cep = CEP;
-    String url = "https://viacep.com.br/ws/${cep}/json/";
-    http.Response response;
-    response = await http.get(Uri.parse(url));
-    print("Resposta: " + response.body);
-  }
 
   Future _getImage(idImagem) async{
-    print("ENTREI");
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     setState(() {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lumini/cadastro.dart';
 import 'package:lumini/favoritos.dart';
 import 'utilitarios.dart';
 import 'favoritos.dart';
